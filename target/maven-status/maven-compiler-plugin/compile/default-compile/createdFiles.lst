@@ -1,7 +1,6 @@
-hello2/BatchConfiguration$1.class
-hello2/Application.class
-hello2/JobCompletionNotificationListener2.class
-hello2/BatchConfiguration.class
-org/springframework/gs_batch_processing/App.class
-hello2/Food.class
-hello2/FoodItemProcessor.class
+org\springframework\gs_batch_processing\App.class
+hello2\FoodItemProcessor.class
+hello2\BatchConfiguration$1.class
+hello2\BatchConfiguration.class
+hello2\JobCompletionNotificationListener2.class
+hello2\Food.class

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
-Built-By: yutaka
-Build-Jdk: 10.0.2
 Implementation-Title: gs-batch-processing
 Implementation-Version: 0.1.0
+Built-By: y2-shimizu
 Implementation-Vendor-Id: org.springframework
+Build-Jdk: 1.8.0_181
 Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
  ot-starter-parent/gs-batch-processing
 Created-By: Maven Integration for Eclipse
