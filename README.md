@@ -1,6 +1,7 @@
 # spring-batch-test
 # Spring Batch メモ
 ##　導入
+
 https://spring.io/guides/gs/sts/
 
 https://spring.io/guides/gs/batch-processing/
@@ -36,8 +37,9 @@ PJコンテキストメニュー＞Run Configuration
 
 引数　classpath:launch-context.xml job1
 
-###　URL[https://qiita.com/yu_eguchi/items/5f93a3e703030d7e472d]に従って作ったJobを移植する
-SampleBatchはSpringBatch2.3なので、4.0のprojectで動かしてみる
+###　[URL](https://qiita.com/yu_eguchi/items/5f93a3e703030d7e472d)に従って作ったJobを移植する
+
+SampleBatchはSpringBatchバージョン2.3なので、4.0のprojectで動かしてみる
 
 以下のファイルをコピー
 * EmployeeProcessor.java
@@ -50,15 +52,30 @@ SampleBatchはSpringBatch2.3なので、4.0のprojectで動かしてみる
 * log4j.properties あとでslf4jに変えたい
 
 pom.xmlにExampleConfiguraion.javaの依存ファイル追加
-`
+```
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.2.2</version>
 		</dependency>
-`
+```
 あとは同様に　Run Configuration で実行
 
+### log4j->slf4j
+```
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+・・・
+	private static final Log log = LogFactory.getLog(EmployeeWriter.class);
+```
+↓
+```
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+・・・
+	private static final Logger log = LoggerFactory.getLogger(EmployeeWriter.class);
+```
+log4j.projertiesは削除してOK
 
 # 参考
 Eclipseプロジェクトやmaven設定で役立ちそう
@@ -71,8 +88,8 @@ http://hiranoon.hatenablog.com/entry/2015/12/30/160514
 * バッチをもうひとつつくる　OK
 * configファイルのxml化　OK
 * 自分でバッチを作ってみる
-** チャンクモデル
-** タスクレットモデル
+  * チャンクモデル
+  * タスクレットモデル
 * Mybatis利用（DB）
 * IF変更（CSV、DB、フラットなファイル）
 * DBを変える（OracleXE）
