@@ -14,10 +14,10 @@
     <bean id="transactionManager"
         class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
 
-    <bean id="jobLauncher"
+<!--     <bean id="jobLauncher"
         class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
         <property name="jobRepository" ref="jobRepository" />
-    </bean>
+    </bean> -->
 
 	<batch:job id="job">
 		<batch:step id="step1">

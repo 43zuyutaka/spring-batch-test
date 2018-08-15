@@ -1,6 +1,6 @@
 # spring-batch-test
-
-## Spring Batch メモ
+# Spring Batch メモ
+##　導入
 https://spring.io/guides/gs/sts/
 
 https://spring.io/guides/gs/batch-processing/
@@ -24,7 +24,43 @@ STSのmaven実行ターゲットを　`spring-boot:run` として実行（チュ
 
 jdbcTemplateって？
 
-### 参考
+## SampleBatchの移殖
+### SampleBatch実行
+https://qiita.com/yu_eguchi/items/5f93a3e703030d7e472d
+
+project＞new＞spring legacy project＞Templates でsimple spring batch project
+
+PJコンテキストメニュー＞Run Configuration
+
+メインクラス　org.springframework.batch.core.launch.support.CommandLineJobRunner
+
+引数　classpath:launch-context.xml job1
+
+###　URL[https://qiita.com/yu_eguchi/items/5f93a3e703030d7e472d]に従って作ったJobを移植する
+SampleBatchはSpringBatch2.3なので、4.0のprojectで動かしてみる
+
+以下のファイルをコピー
+* EmployeeProcessor.java
+* EmployeeWriter.java
+* ExampleConfiguration.java dataSourceなどのComponentを定義しているので必要
+* EmployeeData.java
+* module-context.xml
+* batch.properties
+* launch-context.xml
+* log4j.properties あとでslf4jに変えたい
+
+pom.xmlにExampleConfiguraion.javaの依存ファイル追加
+`
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.2.2</version>
+		</dependency>
+`
+あとは同様に　Run Configuration で実行
+
+
+# 参考
 Eclipseプロジェクトやmaven設定で役立ちそう
 
 http://hiranoon.hatenablog.com/entry/2015/12/30/160514
@@ -32,8 +68,8 @@ http://hiranoon.hatenablog.com/entry/2015/12/30/160514
 
 —-----
 ## 試すこと
-* バッチをもうひとつつくる
-* configファイルのxml化
+* バッチをもうひとつつくる　OK
+* configファイルのxml化　OK
 * 自分でバッチを作ってみる
 ** チャンクモデル
 ** タスクレットモデル
