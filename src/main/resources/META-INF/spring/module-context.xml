@@ -20,4 +20,11 @@
     </batch:step>
 </batch:job>
 
+<batch:job id="taskletjob1">
+    <batch:step id="taskletjob1_step1">
+        <batch:tasklet transaction-manager="transactionManager" start-limit="100" ref="taskletSample">
+        </batch:tasklet>
+    </batch:step>
+</batch:job>
+
 </beans>
