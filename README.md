@@ -60,6 +60,17 @@ pom.xmlにExampleConfiguraion.javaの依存ファイル追加
 		</dependency>
 ```
 
+追記:commons-dbcpの最新は最新は２.５みたい。
+```
+<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-dbcp2 -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-dbcp2</artifactId>
+    <version>2.5.0</version>
+</dependency>
+
+```
+
 module-context.xmlの名前空間修正
 
 ```
@@ -111,6 +122,78 @@ module-context.xmlに以下を定義
 
 実行はチャンクモデルの場合と一緒
 
+# Mybatis利用
+oracleの環境は構築済み。
+[ここ](http://www.mybatis.org/spring/ja/getting-started.html)
+を見ながら設定
+
+### datasource設定
+pom.xml
+```
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis-spring</artifactId>
+		<version>1.3.2</version>
+	</dependency>
+	<dependency>
+		<groupId>org.mybatis</groupId>
+		<artifactId>mybatis</artifactId>
+		<version>3.4.6</version>
+	</dependency>
+```
+
+launch-context.xml
+
+datasourceの設定をmybatis-springのサイトを参考にして実施。[xmlでエラーがでるのはnamgespaceの設定が足りないせいらしい。](http://matsukaz.hatenablog.com/entry/20080108/1199806929)
+
+`xmlns:p="http://www.springframework.org/schema/p"`を追加
+
+```
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+・・・
+```
+
+TERASOLUNAへのoracle設定を参考にpom.xmlに以下を追加
+```
+		<dependency>
+			<groupId>com.oracle.jdbc</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0.2</version>
+		</dependency>
+```
+
+context:property-placeholderにlocationだけ設定しても読み込んでくれない。これもTERASOLUNAのプロパティのオプション設定を参考にする
+```
+	<context:property-placeholder
+		location="classpath:db.properties" system-properties-mode="OVERRIDE"
+		ignore-resource-not-found="false" ignore-unresolvable="true" order="1" />
+```
+
+データソース、transactionManagerの設定も追加
+
+```
+<batch:job-repository id="jobRepository"
+            data-source="adminDataSource"
+            transaction-manager="adminTransactionManager"
+            isolation-level-for-create="READ_COMMITTED"/>
+            
+<bean id="adminTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="adminDataSource"
+          p:rollbackOnCommitFailure="true"/>
+<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+</bean>
+```
+
+
+
 # 参考
 Eclipseプロジェクトやmaven設定で役立ちそう
 
@@ -153,7 +236,7 @@ sqlplus system/oracle@localhost:1521/xe
 
 
 ## oracleの初期設定
-* ユーザ作成
+* ユーザ作成(batch/batchpass, batchadmin/batchadminpassを作成)
 
 ` CREATE USER batch IDENTIFIED BY "batchpass" DEFAULT TABLESPACE users TEMPORARY TABLESPACE temp ;`
 
@@ -241,7 +324,7 @@ docker exec -it <image-name>
   * タスクレットモデル OK
 * Mybatis利用（DB）
 * IF変更（CSV、DB、フラットなファイル）
-* DBを変える（OracleXE）
+* DBを変える（OracleXE）OK
 * ビルドの方法
 * テスト
 
