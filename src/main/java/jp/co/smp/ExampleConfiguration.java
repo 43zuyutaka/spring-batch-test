@@ -1,4 +1,4 @@
-package jp.co.nri;
+package jp.co.smp;
 
 import javax.sql.DataSource;
 

@@ -1,4 +1,4 @@
-package jp.co.nri;
+package jp.co.smp;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
-import jp.co.nri.mapping.EmployeeData;
+import jp.co.smp.mapping.EmployeeData;
 
 @Component("itemWriter")
 public class EmployeeWriter implements ItemWriter<EmployeeData> {

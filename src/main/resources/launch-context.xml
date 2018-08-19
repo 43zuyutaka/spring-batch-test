@@ -19,7 +19,7 @@
 		location="classpath:db.properties" system-properties-mode="OVERRIDE"
 		ignore-resource-not-found="false" ignore-unresolvable="true" order="1" />
 
-	<context:component-scan base-package="jp.co.nri" />
+	<context:component-scan base-package="jp.co.smp" />
 
 	<jdbc:initialize-database
 		data-source="adminDataSource" ignore-failures="ALL">
@@ -58,7 +58,7 @@
 					<bean
 						class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
 						<property name="targetType"
-							value="jp.co.nri.mapping.EmployeeData" />
+							value="jp.co.smp.mapping.EmployeeData" />
 					</bean>
 				</property>
 			</bean>
@@ -70,7 +70,7 @@
 	<bean id="employeeMapper"
 		class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface"
-			value="jp.co.nri.mybatis.smp1.Smp1Mapper" />
+			value="jp.co.smp.mybatis.smp1.Smp1Mapper" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
 

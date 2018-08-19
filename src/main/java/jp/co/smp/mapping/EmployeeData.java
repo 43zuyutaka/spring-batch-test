@@ -1,4 +1,4 @@
-package jp.co.nri.mapping;
+package jp.co.smp.mapping;
 
 public class EmployeeData {
 	private String id;

@@ -1,4 +1,4 @@
-package jp.co.nri.mybatis.smp1;
+package jp.co.smp.mybatis.smp1;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
-import jp.co.nri.mapping.EmployeeData;
+import jp.co.smp.mapping.EmployeeData;
 
 @Component("smp1ItemWriter")
 public class EmployeeWriter implements ItemWriter<EmployeeData> {

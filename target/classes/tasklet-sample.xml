@@ -13,7 +13,7 @@
 	<context:property-placeholder
 		location="classpath:batch.properties" />
 
-	<context:component-scan base-package="jp.co.nri" />
+	<context:component-scan base-package="jp.co.smp" />
 
 	<jdbc:initialize-database
 		data-source="dataSource">

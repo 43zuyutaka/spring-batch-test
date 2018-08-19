@@ -1,16 +1,17 @@
-package jp.co.nri;
+package jp.co.smp.mybatis.smp1;
 
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
-import jp.co.nri.mapping.EmployeeData;
+import jp.co.smp.mapping.EmployeeData;
 
-@Component("itemProcessor")
+@Component("smp1ItemProcessor")
 public class EmployeeProcessor implements ItemProcessor<EmployeeData, EmployeeData> {
 
 	@Override
 	public EmployeeData process(EmployeeData item) throws Exception {
-		// TODO Auto-generated method stub
+		
+		
 		EmployeeData data = new EmployeeData();
         data.setId(item.getId());
         data.setName(item.getName() + "さん");

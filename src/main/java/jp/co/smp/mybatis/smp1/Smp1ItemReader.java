@@ -1,4 +1,4 @@
-package jp.co.nri.mybatis.smp1;
+package jp.co.smp.mybatis.smp1;
 
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
@@ -7,7 +7,7 @@ import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import jp.co.nri.mapping.EmployeeData;
+import jp.co.smp.mapping.EmployeeData;
 
 @Component("smp1ItemReader")
 public class Smp1ItemReader implements ItemReader<EmployeeData> {
