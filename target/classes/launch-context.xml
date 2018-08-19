@@ -12,8 +12,9 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<context:property-placeholder
-		location="classpath:batch.properties" system-properties-mode="OVERRIDE"
-		ignore-resource-not-found="false" ignore-unresolvable="true" order="2" />
+		location="classpath:batch.properties"
+		system-properties-mode="OVERRIDE" ignore-resource-not-found="false"
+		ignore-unresolvable="true" order="2" />
 	<context:property-placeholder
 		location="classpath:db.properties" system-properties-mode="OVERRIDE"
 		ignore-resource-not-found="false" ignore-unresolvable="true" order="1" />
@@ -26,17 +27,17 @@
 	</jdbc:initialize-database>
 
 	<batch:job-repository id="jobRepository"
-            data-source="adminDataSource"
-            transaction-manager="adminTransactionManager"
-            isolation-level-for-create="READ_COMMITTED"/>
-            
-    <bean id="adminTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-          p:dataSource-ref="adminDataSource"
-          p:rollbackOnCommitFailure="true"/>
+		data-source="adminDataSource"
+		transaction-manager="adminTransactionManager"
+		isolation-level-for-create="READ_COMMITTED" />
 
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-          p:dataSource-ref="dataSource"
-          p:rollbackOnCommitFailure="true" />
+	<bean id="adminTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="adminDataSource" p:rollbackOnCommitFailure="true" />
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		p:dataSource-ref="dataSource" p:rollbackOnCommitFailure="true" />
 
 	<import resource="classpath:/META-INF/spring/module-context.xml" />
 
@@ -66,6 +67,13 @@
 		<property name="linesToSkip" value="1" />
 	</bean>
 
+	<bean id="employeeMapper"
+		class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface"
+			value="jp.co.nri.mybatis.smp1.Smp1Mapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
 	<!-- mybatis用の設定 -->
 	<bean id="sqlSessionFactory"
 		class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -74,16 +82,14 @@
 
 	<bean id="dataSource"
 		class="org.apache.commons.dbcp2.BasicDataSource"
-		destroy-method="close"
-		p:driverClassName="${jdbc.driver}"
+		destroy-method="close" p:driverClassName="${jdbc.driver}"
 		p:url="${jdbc.url}" p:username="${jdbc.username}"
 		p:password="${jdbc.password}" p:maxTotal="10" p:minIdle="1"
 		p:maxWaitMillis="5000" p:defaultAutoCommit="false" />
-		
-		<bean id="adminDataSource"
+
+	<bean id="adminDataSource"
 		class="org.apache.commons.dbcp2.BasicDataSource"
-		destroy-method="close"
-		p:driverClassName="${admin.jdbc.driver}"
+		destroy-method="close" p:driverClassName="${admin.jdbc.driver}"
 		p:url="${admin.jdbc.url}" p:username="${admin.jdbc.username}"
 		p:password="${admin.jdbc.password}" p:maxTotal="10" p:minIdle="1"
 		p:maxWaitMillis="5000" p:defaultAutoCommit="false" />

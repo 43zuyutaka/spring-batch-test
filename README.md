@@ -127,7 +127,7 @@ oracleの環境は構築済み。
 [ここ](http://www.mybatis.org/spring/ja/getting-started.html)
 を見ながら設定
 
-### datasource設定
+### spring-mybatis設定
 pom.xml
 ```
 	<dependency>
@@ -191,6 +191,57 @@ context:property-placeholderにlocationだけ設定しても読み込んでく�
 		<property name="dataSource" ref="dataSource" />
 </bean>
 ```
+
+### mybatis設定
+
+参考URL：http://www.mybatis.org/spring/ja/getting-started.html
+
+とりあえずテーブルを準備
+```
+CREATE TABLE employee (
+ id varchar(100),
+ name varchar(100),
+ note varchar(100),
+ primary key ( id )
+);
+INSERT INTO employee VALUES ( 'id001', 'User111', 'note111');
+INSERT INTO employee VALUES ( 'id002', 'User222', 'note222');
+INSERT INTO employee VALUES ( 'id003', 'User333', 'note333');
+
+```
+
+```
+public interface Smp1Mapper {
+	@Select("SELECT * FROM employee WHERE id ='id001'")
+	 EmployeeData getUser(@Param("userId") String userId);
+}
+
+とか
+
+@Component("smp1ItemReader")
+public class Smp1ItemReader implements ItemReader<EmployeeData> {
+	private boolean flg = false;
+	
+	@Autowired
+	private Smp1Mapper employeeMapper;
+	
+	@Override
+	public EmployeeData read()
+			throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+
+		System.out.println("*** employee Reader start ***");
+		EmployeeData data = employeeMapper.getUser("user001");
+		if (flg == false) {
+			flg = true;
+			System.out.println("*** employee Reader done 111 ***");
+			return data;
+		} else {
+			System.out.println("*** employee Reader done 222 ***");
+			return null;
+		}
+	}
+```
+
 
 
 
@@ -325,6 +376,7 @@ docker exec -it <image-name>
 * Mybatis利用（DB）
 * IF変更（CSV、DB、フラットなファイル）
 * DBを変える（OracleXE）OK
+* jobRepositoryの初期化
 * ビルドの方法
 * テスト
 
