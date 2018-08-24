@@ -57,6 +57,13 @@
 			<artifactId>ojdbc7</artifactId>
 			<version>12.1.0.2</version>
 		</dependency>
+
+		<!-- jobRepositoryのクリーン -->
+		<dependency>
+			<groupId>com.javaetmoi.core</groupId>
+			<artifactId>spring-batch-toolkit</artifactId>
+			<version>4.0.0</version>
+		</dependency>
 	</dependencies>
 
 

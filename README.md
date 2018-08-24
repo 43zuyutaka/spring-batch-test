@@ -242,8 +242,102 @@ public class Smp1ItemReader implements ItemReader<EmployeeData> {
 	}
 ```
 
+## jobRepositoryのクリーン
+[参考URL](https://terasoluna-batch.github.io/guideline/5.0.1.RELEASE/ja/Ch04_JobParameter.html#Ch04_JobParameter_HowToUse_Converter)
+
+[spring-batch-toolkit](https://github.com/arey/spring-batch-toolkit.git)
+を使う
+
+### インストール
+```
+git clone https://github.com/arey/spring-batch-toolkit.git
+mvn clean install
+```
+2018/8/24時点ではJDK10で動かすとsurefire?のエラーがでるので、pomの設定を変える([参考](https://github.com/junit-team/junit4/issues/1513))
+```
+<version.plugin.maven-surefire-plugin>2.21.0</version.plugin.maven-surefire-plugin><version.plugin.maven-surefire-plugin>2.20.1</version.plugin.maven-surefire-plugin>
+↓
+<version.plugin.maven-surefire-plugin>2.21.0</version.plugin.maven-surefire-plugin><version.plugin.maven-surefire-plugin>2.21.0</version.plugin.maven-surefire-plugin>
+
+```
+
+#### やってみる①
+* taskletの定義
+
+```
+	<batch:job id="jobRepositoryCleanJob">
+		<batch:step id="jobRepositoryCleanJob_step1">
+			<batch:tasklet transaction-manager="adminTransactionManager"
+				start-limit="100" ref="removeSpringBatchHistoryTasklet">
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+```
+* RemoveSpringBatchHistoryTaskletをBeanとして登録。また、jdbcTemplateのBean登録が必要
+```
+	<bean id="removeSpringBatchHistoryTasklet"
+		class="com.javaetmoi.core.batch.tasklet.RemoveSpringBatchHistoryTasklet">
+		<property name="jdbcTemplate" ref="adminJdbcTemplate" />
+		<property name="historicRetentionMonth" value="0" />
+	</bean>
+
+	<bean id="adminJdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="adminDataSource" />
+	</bean>
+```
+
+* エラーが。
+transaction-managerはjdbcTemplateとdataSourceを合わせないとjobRepositoryのdeleteができない。
+
+また、削除対象のjobRepositoryを使って起動したバッチではエラーが出てロールバックされてしまう。
+実行中の自分のレコードが削除されているためと思われる。
+
+#### やってみる② spring-batch-toolkitを使うだけにする
+springのテンプレートをgit cloneする。[参考](https://spring.io/guides/gs/batch-processing/)。
+[URL](https://github.com/arey/spring-batch-toolkit.git)に従ってspring-batch-toolkitをpomに追加
+```
+<dependency>
+  <groupId>com.javaetmoi.core</groupId>
+  <artifactId>spring-batch-toolkit</artifactId>
+  <version>4.0.0</version>
+</dependency> 
+```
+また、ジョブを動かすのに必要なモジュールもpomに追加
+```
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.jdbc</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>12.1.0.2</version>
+
+```
+このバッチ自体のjobRepositoryはadminDatasource(hsqldb)で、このバッチで削除するjobRepositoryへの接続はdataSource(oracle)で接続する。
+また、ジョブのtransactionManagerとdataSourceの設定はあわせないとよくわからない動作をする
+
+* 実行 プロジェクトを右クリックから` Run Configuration`
+  *  projectを選択
+  *  Main Classに`org.springframework.batch.core.launch.support.CommandLineJobRunner`
+  *  arguments>Program argumentsに`classpath:/launch-context.xml jobRepositoryCleanJob`
+  * `Run`
 
 
+* 動作確認
+```
+sqlplus batchadmin/batchadminpass@localhost:1521/xe
+> select * from batch_job_instance
+no rows selcted.
+```
+## 実行可能なJARの作成と実行
+
+参考URLリスト
+* [TERASOLUNA(実行方法)](https://terasoluna-batch.github.io/guideline/5.0.0.RELEASE/ja/Ch04_SyncJob.html)
+* [JARファイルの実行メモ(hishidama memo)](http://www.ne.jp/asahi/hishidama/home/tech/java/jar.html)
+* []()
 
 # 参考
 Eclipseプロジェクトやmaven設定で役立ちそう
@@ -373,10 +467,11 @@ docker exec -it <image-name>
 * 自分でバッチを作ってみる
   * チャンクモデル　OK
   * タスクレットモデル OK
-* Mybatis利用（DB）
+* Mybatis利用（DB）OK
 * IF変更（CSV、DB、フラットなファイル）
 * DBを変える（OracleXE）OK
-* jobRepositoryの初期化
+* jobRepositoryの初期化　OK
+* ジョブを再実行可能にする（TERASOLUNA方式）
 * ビルドの方法
 * テスト
 
