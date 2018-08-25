@@ -31,6 +31,11 @@
 		transaction-manager="adminTransactionManager"
 		isolation-level-for-create="READ_COMMITTED" />
 
+	<!-- jobRepositoryのdataSource/transactionManager切り換え用 -->
+<!-- 	<batch:job-repository id="jobRepository" -->
+<!-- 		data-source="dataSource" transaction-manager="transactionManager" -->
+<!-- 		isolation-level-for-create="READ_COMMITTED" /> -->
+
 	<bean id="adminTransactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
 		p:dataSource-ref="adminDataSource" p:rollbackOnCommitFailure="true" />
@@ -73,6 +78,22 @@
 			value="jp.co.smp.mybatis.smp1.Smp1Mapper" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
+
+	<!-- jobRepositoryのクリーンアップ用 要jdbcTemplate -->
+	<bean id="removeSpringBatchHistoryTasklet"
+		class="com.javaetmoi.core.batch.tasklet.RemoveSpringBatchHistoryTasklet">
+		<property name="jdbcTemplate" ref="adminJdbcTemplate" />
+		<property name="historicRetentionMonth" value="0" />
+	</bean>
+
+	<bean id="adminJdbcTemplate"
+		class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="adminDataSource" />
+	</bean>
+<!-- 	<bean id="jdbcTemplate" -->
+<!-- 		class="org.springframework.jdbc.core.JdbcTemplate"> -->
+<!-- 		<property name="dataSource" ref="dataSource" /> -->
+<!-- 	</bean> -->
 
 	<!-- mybatis用の設定 -->
 	<bean id="sqlSessionFactory"

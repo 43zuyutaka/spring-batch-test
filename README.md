@@ -459,6 +459,21 @@ docker ps -a
 ```
 docker exec -it <image-name>
 ```
+# gradle
+
+## install
+[参考](https://gradle.org/install/)
+```
+brew install gradle
+```
+
+
+# maven色々メモ
+
+* 依存性の確認
+```
+mvn dependency:tree
+```
 
 —-----
 ## 試すこと
@@ -468,10 +483,12 @@ docker exec -it <image-name>
   * チャンクモデル　OK
   * タスクレットモデル OK
 * Mybatis利用（DB）OK
+ * h2とoracleの切替
 * IF変更（CSV、DB、フラットなファイル）
 * DBを変える（OracleXE）OK
 * jobRepositoryの初期化　OK
 * ジョブを再実行可能にする（TERASOLUNA方式）
+* gradleお試し
 * ビルドの方法
 * テスト
 
