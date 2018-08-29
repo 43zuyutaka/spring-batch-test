@@ -20,7 +20,7 @@ public class Smp1ItemReader implements ItemReader<EmployeeData> {
 	public EmployeeData read()
 			throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
 
-		System.out.println("*** employee Reader start ***");
+		System.out.println("*** employee Reader start ****");
 		EmployeeData data = employeeMapper.getUser("user001");
 		if (flg == false) {
 			flg = true;

@@ -467,6 +467,42 @@ docker exec -it <image-name>
 brew install gradle
 ```
 
+## 依存ライブラリ追加
+`build.gradle`に追加。mavenのdependensiesのgroupid,artifactid,versionをコロンで区切って記述する。
+
+ojdbcのような外部から持ってきたJARはローカルのmavenリポジトリにインストールして参照する方法と、以下の様に特定のパスを指定する方法がある。（ojdbcはORACLEのmavenリポジトリがあるみたい。要アカウント）
+
+```
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-batch")
+    compile("org.hsqldb:hsqldb")
+    testCompile("junit:junit")
+    //dbcp
+    compile("org.apache.commons:commons-dbcp2:2.5.0")
+    
+    compile("org.mybatis:mybatis-spring:1.3.2")
+    compile("org.mybatis:mybatis:3.4.6")
+    compile files('libs/ojdbc7.jar')
+    
+    //jobRepojitoryのクリーン
+    compile("com.javaetmoi.core:spring-batch-toolkit:4.0.0")
+    
+}
+```
+
+## ビルド
+バッチ用の[ブランクプロジェクト](https://spring.io/guides/gs/batch-processing/)のサイトの手順通り。
+
+`gradle build`でプロジェクトのbuild/libsにjarができる。
+
+bootJarの設定にある名前でjarファイルが作成される。
+```
+bootJar {
+    baseName = 'gs-batch-processing'
+    version =  '0.1.0'
+}
+```
+
 
 # maven色々メモ
 
@@ -483,12 +519,13 @@ mvn dependency:tree
   * チャンクモデル　OK
   * タスクレットモデル OK
 * Mybatis利用（DB）OK
- * h2とoracleの切替
+ * h2とoracleの切替できる様にする
 * IF変更（CSV、DB、フラットなファイル）
 * DBを変える（OracleXE）OK
 * jobRepositoryの初期化　OK
 * ジョブを再実行可能にする（TERASOLUNA方式）
 * gradleお試し
+ * 基本のプロジェクトで利用　OK
 * ビルドの方法
 * テスト
 
